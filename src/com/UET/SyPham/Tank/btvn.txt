@@ -1,0 +1,9 @@
+-Tạo object Bullet
+-Tạo object BulletManager
++ trong BulletManager sẽ có mảng để quản lý Bullet
++ có phương thức drawAll
+*Note: trong Tank sẽ phải có một BulletManager
+
+- Bắt thêm sự kiện nhấn nút cách để bắn đạn
+
+- Khi bấm thêm một lần cách sẽ có thêm một đói tượng Bullet
