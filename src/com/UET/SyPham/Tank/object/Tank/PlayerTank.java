@@ -20,10 +20,10 @@ public class PlayerTank extends Tank {
 
     }
 
-    @Override
-    public void drawTank(Graphics2D g2d) {
-        super.drawTank(g2d);
-    }
+//    @Override
+//    public void drawTank(Graphics2D g2d) {
+//        super.drawTank(g2d);
+//    }
 
     public void keyPress(KeyEvent e) {
         switch (e.getKeyCode()) {

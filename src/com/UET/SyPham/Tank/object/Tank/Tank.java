@@ -41,11 +41,15 @@ public abstract class Tank {
         this.leftTank = common.getImage("bossyellow_left.png");
         this.rightTank = common.getImage("bossyellow_right.png");
         orient = 0;
-        speedTank = 100;
+        speedTank = 10;
 
 
     }
 
+    /**
+     * Vẽ tank với các vị trí xoay hình khác nhau
+     * @param g2d
+     */
     public void drawTank(Graphics2D g2d) {
         //System.out.println(orient);
         switch (orient) {
@@ -71,6 +75,9 @@ public abstract class Tank {
 
     }
 
+    /**
+     * Hàm di chuyển
+     */
     public void move() {
         checkCollisionTank();
         switch (orient) {
@@ -99,6 +106,10 @@ public abstract class Tank {
         }
     }
 
+    /**
+     *Hàm kiểm tra vị trí của tank và tường, nếu vào tường thì phải di chuyển theo hướng khác
+     * @return
+     */
     protected boolean checkCollisionTank() {
         System.out.println(X + " " + Y);
         if (orient == UP && Y <= 0) {
