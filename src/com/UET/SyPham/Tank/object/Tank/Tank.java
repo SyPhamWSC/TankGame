@@ -21,11 +21,15 @@ public abstract class Tank {
     protected Image downTank;
     protected Image leftTank;
     protected Image rightTank;
+    protected int speed;
 
     public static final int UP = 1;
     public static final int DOWN = 2;
     public static final int LEFT = 3;
     public static final int RIGHT = 4;
+
+    public static final int SPEED_HIGH = 5;
+    public static final int SPEED_LOW = 3;
 
     protected BulletManager bulletManager;
     int orient;
@@ -42,8 +46,7 @@ public abstract class Tank {
         this.rightTank = common.getImage("bossyellow_right.png");
         orient = 0;
         speedTank = 10;
-
-
+        this.speed = 0;
     }
 
     /**
@@ -101,6 +104,40 @@ public abstract class Tank {
                 if (checkCollisionTank())
                     X--;
                     break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Hàm di chuyển
+     * update
+     */
+    public void move(int orient) {
+        this.orient = orient;
+        System.out.println("move: " + orient);
+        checkCollisionTank();
+        switch (orient) {
+            case UP:
+                if (checkCollisionTank())
+                    Y-=speed;
+                break;
+
+            case DOWN:
+
+                if (checkCollisionTank())
+                    Y+=speed;
+                break;
+            case RIGHT:
+
+                if (checkCollisionTank())
+                    X+=speed;
+                break;
+
+            case LEFT:
+                if (checkCollisionTank())
+                    X-=speed;
+                break;
             default:
                 break;
         }

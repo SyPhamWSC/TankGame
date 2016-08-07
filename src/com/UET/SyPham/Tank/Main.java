@@ -7,12 +7,7 @@ import com.UET.SyPham.Tank.GUI.GUI;
  */
 public class Main {
     public static void main(String[] Args){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                GUI gui = new GUI();
-                gui.setVisible(true);
-            }
-        }).start();
+        GUI gui = new GUI();
+        gui.setVisible(true);
     }
 }

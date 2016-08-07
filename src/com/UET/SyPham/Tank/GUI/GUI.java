@@ -14,7 +14,6 @@ public class GUI extends JFrame{
 
 
     public GUI(){
-
         initCompoments();
     }
     public void initCompoments(){
@@ -22,6 +21,8 @@ public class GUI extends JFrame{
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        setUndecorated(true);
         playGamePanel = new PlayGamePanel();
         add(playGamePanel);
 

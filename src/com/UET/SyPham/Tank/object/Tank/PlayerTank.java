@@ -17,6 +17,7 @@ public class PlayerTank extends Tank {
     public Bullet bulletPlayer;
     public PlayerTank(int x, int y) {
         super(x, y);
+        this.speed = SPEED_LOW;
         //Bullet bulletTank = new Bullet();
 
     }
@@ -78,6 +79,19 @@ public class PlayerTank extends Tank {
             super.move();
             System.out.println("Vi tri player: "+this.X+" "+ this.Y);
         }
+
+    }
+
+    @Override
+    public void move(int orient) {
+//        if(checkAllowMove){
+//            super.move(orient);
+//            System.out.println("Vi tri player: "+this.X+" "+ this.Y);
+//        }
+
+        super.move(orient);
+        System.out.println("Vi tri player: "+this.X+" "+ this.Y);
+
 
     }
 

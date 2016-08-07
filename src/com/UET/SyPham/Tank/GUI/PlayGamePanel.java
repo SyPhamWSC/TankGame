@@ -6,6 +6,8 @@ import com.UET.SyPham.Tank.object.Bullet.BulletManager;
 import com.UET.SyPham.Tank.object.Tank.EnemyTank;
 import com.UET.SyPham.Tank.object.Tank.EnemyTankManager;
 import com.UET.SyPham.Tank.object.Tank.PlayerTank;
+import com.UET.SyPham.Tank.object.Tank.Tank;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +27,14 @@ public class PlayGamePanel extends JPanel implements KeyListener {
 
     private BulletManager bulletManagerEnemyTanks;
     private BulletManager bulletManager;
+
+    private boolean isPlaying;
+    private int orient;
+
     public PlayGamePanel() {
+        isPlaying = true;
         initCompoments();
+        thread.start();
     }
 
     public void initCompoments() {
@@ -44,11 +52,43 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         enemyTankManager.addEnemyTank(enemyTanks2);
         enemyTankManager.addEnemyTank(enemyTanks3);
 
-
-
-        thread.start();
         addKeyListener(this);
         setFocusable(true);
+    }
+
+    /**
+     * update lai tro choi sau 1 khoang tgian nao day
+     */
+    private void gameLoop(){
+        update();
+        draw();
+    }
+
+    private void update() {
+        enemyTankManager.shootAll(bulletManagerEnemyTanks);
+
+        if (orient != 0){
+            System.out.println("orient: " + orient);
+            playerTank.move(orient);
+        }
+
+
+//        count++;
+//        if (count % 10 == 0) {
+//
+//            enemyTankManager.moveAll();
+//            count = 0;
+//        }
+//        if (count % 5 == 0){
+//            bulletManager.moveAll();
+//            bulletManagerEnemyTanks.moveAll();
+//        }
+
+
+    }
+
+    private void draw() {
+        repaint();
     }
 
     @Override
@@ -61,31 +101,16 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         bulletManager.drawAllBullet(g2d);
         enemyTankManager.drawAll(g2d);
         bulletManagerEnemyTanks.drawAllBullet(g2d);
-
-
     }
 
     long count = 0;
     Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {
-
-
-            while (true) {
-                enemyTankManager.shootAll(bulletManagerEnemyTanks);
-                count++;
-                if (count % 10 == 0) {
-                    playerTank.move();
-                    enemyTankManager.moveAll();
-                    count = 0;
-                }
-                if (count % 5 == 0){
-                    bulletManager.moveAll();
-                    bulletManagerEnemyTanks.moveAll();
-                }
-                repaint();
+            while (isPlaying) {
+                gameLoop();
                 try {
-                    sleep(1);
+                    sleep(16);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -101,25 +126,33 @@ public class PlayGamePanel extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        playerTank.keyPress(keyEvent);
-        switch (keyEvent.getKeyCode()){
+//        playerTank.keyPress(keyEvent);
+        switch (keyEvent.getKeyCode()) {
             case KeyEvent.VK_SPACE:
                 bulletManager.add(new Bullet(playerTank.getX(), playerTank.getY(), playerTank.getOrient(), playerTank.getSizeTank()));
+
+            case KeyEvent.VK_W:
+                orient = Tank.UP;
+                break;
+            case KeyEvent.VK_S:
+                orient = Tank.DOWN;
+                break;
+            case KeyEvent.VK_A:
+                orient = Tank.LEFT;
+                break;
+            case KeyEvent.VK_D:
+                orient = Tank.RIGHT;
+                break;
         }
 
     }
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        playerTank.keyRelease(keyEvent);
-
-
+//        playerTank.keyRelease(keyEvent);
+        orient = 0;
         //System.out.println(keyEvent.getKeyCode());
     }
-    public int randomLocation(){
-        int index;
-        Random rd = new Random();
-        index = rd.nextInt(470);
-        return index;
-    }
+
+
 }
