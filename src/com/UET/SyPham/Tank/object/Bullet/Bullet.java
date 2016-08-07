@@ -73,11 +73,11 @@ public class Bullet {
         g2d.drawImage(imgBullet, X, Y, size, size, null);
     }
 
-    public void setXYOrient(int x, int y, int orient) {
-        this.X = x;
-        this.Y = y;
-        this.orient = orient;
-    }
+//    public void setXYOrient(int x, int y, int orient) {
+//        this.X = x;
+//        this.Y = y;
+//        this.orient = orient;
+//    }
 
 
 }

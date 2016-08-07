@@ -2,6 +2,7 @@ package com.UET.SyPham.Tank.object.Tank;
 
 import com.UET.SyPham.Tank.common.CommonVLs;
 
+import java.awt.*;
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
@@ -14,7 +15,7 @@ public class EnemyTank extends Tank {
     Random random = new Random();
     int delay = random.nextInt(100);
     int count = 0;
-
+    int shoot = random.nextInt(100);
 
 
     public EnemyTank(int x, int y) {
@@ -32,11 +33,11 @@ public class EnemyTank extends Tank {
     public void move() {
         //int i = 100000;
         super.move();
-        System.out.println(orient);
+        //System.out.println(orient);
         if(delay > 40 ) {
             //super.move();
             --delay;
-            System.out.println("delay: "+delay);
+            //System.out.println("delay: "+delay);
         }
         else if(delay <40){
             delay = random.nextInt(1000);
@@ -46,7 +47,7 @@ public class EnemyTank extends Tank {
 
             if(orient != 0){
                 count++;
-                System.out.println("count: "+ count);
+                //System.out.println("count: "+ count);
                 if(count ==50){
                     super.move();
                     count =0;
@@ -55,9 +56,25 @@ public class EnemyTank extends Tank {
             }
             else orient = random.nextInt(5);
 
-            System.out.println("Vi tri tank dich: "+ this.X +" "+this.Y);
+            //System.out.println("Vi tri tank dich: "+ this.X +" "+this.Y);
         }
 
+    }
+    @Override
+    public void drawTank(Graphics2D g2d){
+        super.drawTank(g2d);
+    }
+
+    public boolean autoShoot(){
+
+        if(shoot>0){
+            --shoot;
+            return false;
+        }
+        else {
+            shoot = random.nextInt(1000);
+            return true;
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import com.UET.SyPham.Tank.common.CommonVLs;
 import com.UET.SyPham.Tank.object.Bullet.Bullet;
 import com.UET.SyPham.Tank.object.Bullet.BulletManager;
 import com.UET.SyPham.Tank.object.Tank.EnemyTank;
+import com.UET.SyPham.Tank.object.Tank.EnemyTankManager;
 import com.UET.SyPham.Tank.object.Tank.PlayerTank;
 
 import javax.swing.*;
@@ -19,8 +20,10 @@ import static java.lang.Thread.sleep;
  */
 public class PlayGamePanel extends JPanel implements KeyListener {
     private PlayerTank playerTank;
-    private EnemyTank enemyTanks;
+    private EnemyTank enemyTanks1, enemyTanks2, enemyTanks3;
+    private EnemyTankManager enemyTankManager;
 
+    private BulletManager bulletManagerEnemyTanks;
     private BulletManager bulletManager;
     public PlayGamePanel() {
         initCompoments();
@@ -31,7 +34,17 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         setBackground(Color.BLUE);
         bulletManager = new BulletManager();
         playerTank = new PlayerTank(30, 30);
-        enemyTanks = new EnemyTank(this.randomLocation(), this.randomLocation());
+        enemyTankManager = new EnemyTankManager();
+
+        bulletManagerEnemyTanks = new BulletManager();
+        enemyTanks1 = new EnemyTank(250, 250);
+        enemyTanks2 = new EnemyTank(300,350);
+        enemyTanks3 = new EnemyTank(400, 450);
+        enemyTankManager.addEnemyTank(enemyTanks1);
+        enemyTankManager.addEnemyTank(enemyTanks2);
+        enemyTankManager.addEnemyTank(enemyTanks3);
+
+
 
         thread.start();
         addKeyListener(this);
@@ -46,10 +59,8 @@ public class PlayGamePanel extends JPanel implements KeyListener {
 
         playerTank.drawTank(g2d);
         bulletManager.drawAllBullet(g2d);
-        enemyTanks.drawTank(g2d);
-        //enemyTanks.move();
-        //playerTank.move();
-        //playerTank.bulletTank.drawBullet(g2d);
+        enemyTankManager.drawAll(g2d);
+        bulletManagerEnemyTanks.drawAllBullet(g2d);
 
 
     }
@@ -61,14 +72,16 @@ public class PlayGamePanel extends JPanel implements KeyListener {
 
 
             while (true) {
+                enemyTankManager.shootAll(bulletManagerEnemyTanks);
                 count++;
                 if (count % 10 == 0) {
                     playerTank.move();
-                    enemyTanks.move();
+                    enemyTankManager.moveAll();
                     count = 0;
                 }
                 if (count % 5 == 0){
                     bulletManager.moveAll();
+                    bulletManagerEnemyTanks.moveAll();
                 }
                 repaint();
                 try {

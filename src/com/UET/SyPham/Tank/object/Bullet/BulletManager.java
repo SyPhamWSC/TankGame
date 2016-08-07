@@ -29,4 +29,8 @@ public class BulletManager {
         bullets.add(bullet);
     }
 
+    public ArrayList<Bullet> returnBullet(){
+        return bullets;
+    }
+
 }

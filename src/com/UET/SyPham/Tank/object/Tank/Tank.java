@@ -111,7 +111,7 @@ public abstract class Tank {
      * @return
      */
     protected boolean checkCollisionTank() {
-        System.out.println(X + " " + Y);
+        //System.out.println(X + " " + Y);
         if (orient == UP && Y <= 0) {
             Y = 1;
             return false;
@@ -151,6 +151,7 @@ public abstract class Tank {
     public int getOrient() {
         return this.orient;
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.UET.SyPham.Tank.object.Tank;
 
 import com.UET.SyPham.Tank.object.Bullet.Bullet;
+import com.UET.SyPham.Tank.object.Bullet.BulletManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -75,23 +76,13 @@ public class PlayerTank extends Tank {
     public void move() {
         if(checkAllowMove){
             super.move();
+            System.out.println("Vi tri player: "+this.X+" "+ this.Y);
         }
 
-//        switch (orient) {
-//            case UP:
-//                if (checkAllowMove == true)
-//                    Y--;
-//                break;
-//            case DOWN:
-//                if (checkAllowMove == true) Y++;
-//                break;
-//            case RIGHT:
-//                if (checkAllowMove == true) X++;
-//                break;
-//            case LEFT:
-//                if (checkAllowMove == true) X--;
-//                break;
-//            default:
-//        }
+    }
+
+    public boolean checkBullet(BulletManager enemyBullet){
+        
+        return false;
     }
 }
