@@ -26,29 +26,25 @@ public class EnemyTank extends Tank {
         leftTank = common.getImage("player_green_3.png");
         rightTank = common.getImage("player_green_4.png");
         orient = UP;
+        speed = SPEED_LOW;
 
     }
 
+
     @Override
     public void move() {
-        //int i = 100000;
-        super.move();
-        //System.out.println(orient);
-        if(delay > 40 ) {
-            //super.move();
-            --delay;
-            //System.out.println("delay: "+delay);
-        }
-        else if(delay <40){
-            delay = random.nextInt(1000);
 
+        super.move();
+        if(delay > 30 ) {
+            --delay;
+        }
+        else if(delay <30){
+            delay = random.nextInt(100);
         }
         else {
-
             if(orient != 0){
                 count++;
-                //System.out.println("count: "+ count);
-                if(count ==50){
+                if(count ==20){
                     super.move();
                     count =0;
                     orient = random.nextInt(5);
@@ -56,7 +52,7 @@ public class EnemyTank extends Tank {
             }
             else orient = random.nextInt(5);
 
-            //System.out.println("Vi tri tank dich: "+ this.X +" "+this.Y);
+            //System.out.println("Vi tri tank dich: "+ this.X +" "+this.Y +" " + orient);
         }
 
     }
@@ -72,9 +68,10 @@ public class EnemyTank extends Tank {
             return false;
         }
         else {
-            shoot = random.nextInt(1000);
+            shoot = random.nextInt(50);
             return true;
         }
     }
+
 
 }

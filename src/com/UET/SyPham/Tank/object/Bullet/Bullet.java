@@ -5,6 +5,7 @@ import com.UET.SyPham.Tank.object.Tank.Tank;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 /**
  * Created by sypha_000 on 27-Jul-2016.
@@ -52,20 +53,19 @@ public class Bullet {
     }
 
     public void move() {
-
         switch (orient) {
             case UP:
-                Y--;
+                Y-= this.speedBullet;
                 break;
             case DOWN:
                 //System.out.println("move");
-                Y++;
+                Y+= this.speedBullet;
                 break;
             case RIGHT:
-                X++;
+                X+= this.speedBullet;
                 break;
             case LEFT:
-                X--;
+                X-= this.speedBullet;
         }
     }
 
@@ -78,6 +78,59 @@ public class Bullet {
 //        this.Y = y;
 //        this.orient = orient;
 //    }
+
+    public int getX(){
+        return this.X;
+    }
+
+    public int getY(){
+        return this.Y;
+    }
+
+    public int getSize(){
+        return this.size;
+    }
+    public int getSpeed(){
+        return this.speedBullet;
+    }
+    public int getOrient(){
+        return this.orient;
+    }
+
+
+
+    public boolean isPointInside(int xObj, int yObj, int x, int y, int size){
+        int bottomPoint = x + size;
+        int rightPoint = y + size;
+        if(xObj > x
+                && yObj >y
+                && xObj < bottomPoint
+                && yObj < rightPoint
+                ){
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isObjInside(int xObj, int yObj, int sizeObj){
+        int x = this.X*this.size;
+        int y = this.Y*this.size;
+        if(isPointInside(xObj,yObj,x,y, this.size)
+                ||isPointInside(xObj + sizeObj, yObj, x, y, this.size)
+                || isPointInside(xObj, yObj + sizeObj, x, y, this.size)
+                || isPointInside(xObj + sizeObj, yObj + sizeObj, x, y, this.size)){
+            return true;
+        }
+        if(isPointInside(x,y,xObj,yObj, sizeObj)
+                ||isPointInside(x + this.size, y, xObj, yObj, sizeObj)
+                || isPointInside(x, y + this.size, xObj, yObj, sizeObj)
+                || isPointInside(x + this.size, y + this.size, xObj, yObj, sizeObj)){
+            return true;
+        }
+
+        return false;
+    }
 
 
 }

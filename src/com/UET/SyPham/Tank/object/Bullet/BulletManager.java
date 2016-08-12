@@ -29,6 +29,15 @@ public class BulletManager {
         bullets.add(bullet);
     }
 
+    public boolean checkInside(int x, int y, int size){
+        for (int i = 0; i < bullets.size() ; i++) {
+            if( bullets.get(i).isObjInside(x, y, size)) {
+                return true;
+            }
+        }
+        return false;
+
+    }
     public ArrayList<Bullet> returnBullet(){
         return bullets;
     }

@@ -4,8 +4,8 @@ import com.UET.SyPham.Tank.common.CommonVLs;
 import com.UET.SyPham.Tank.object.Bullet.Bullet;
 import com.UET.SyPham.Tank.object.Bullet.BulletManager;
 
-import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * Created by sypha_000 on 27-Jul-2016.
@@ -14,7 +14,7 @@ public abstract class Tank {
     protected int X;
     protected int Y;
     protected final int sizeTank = 30;
-    protected int speedTank;
+    //protected int speedTank;
     protected boolean checkLocation;
     protected String direction;
     protected Image upTank;
@@ -45,12 +45,13 @@ public abstract class Tank {
         this.leftTank = common.getImage("bossyellow_left.png");
         this.rightTank = common.getImage("bossyellow_right.png");
         orient = 0;
-        speedTank = 10;
+        //speedTank = 10;
         this.speed = 0;
     }
 
     /**
      * Vẽ tank với các vị trí xoay hình khác nhau
+     *
      * @param g2d
      */
     public void drawTank(Graphics2D g2d) {
@@ -86,24 +87,24 @@ public abstract class Tank {
         switch (orient) {
             case UP:
                 if (checkCollisionTank())
-                    Y--;
-                    break;
+                    Y -= speed;
+                break;
 
             case DOWN:
 
                 if (checkCollisionTank())
-                    Y++;
-                    break;
+                    Y += speed;
+                break;
             case RIGHT:
 
                 if (checkCollisionTank())
-                    X++;
-                    break;
+                    X += speed;
+                break;
 
             case LEFT:
                 if (checkCollisionTank())
-                    X--;
-                    break;
+                    X -= speed;
+                break;
             default:
                 break;
         }
@@ -115,28 +116,28 @@ public abstract class Tank {
      */
     public void move(int orient) {
         this.orient = orient;
-        System.out.println("move: " + orient);
-        checkCollisionTank();
+        //System.out.println("move: " + orient);
+        //checkCollisionTank();
         switch (orient) {
             case UP:
                 if (checkCollisionTank())
-                    Y-=speed;
+                    Y -= speed;
                 break;
 
             case DOWN:
 
                 if (checkCollisionTank())
-                    Y+=speed;
+                    Y += speed;
                 break;
             case RIGHT:
 
                 if (checkCollisionTank())
-                    X+=speed;
+                    X += speed;
                 break;
 
             case LEFT:
                 if (checkCollisionTank())
-                    X-=speed;
+                    X -= speed;
                 break;
             default:
                 break;
@@ -144,7 +145,8 @@ public abstract class Tank {
     }
 
     /**
-     *Hàm kiểm tra vị trí của tank và tường, nếu vào tường thì phải di chuyển theo hướng khác
+     * Hàm kiểm tra vị trí của tank và tường, nếu vào tường thì phải di chuyển theo hướng khác
+     *
      * @return
      */
     protected boolean checkCollisionTank() {
@@ -153,32 +155,40 @@ public abstract class Tank {
             Y = 1;
             return false;
         }
-        if (orient == DOWN && Y >= (CommonVLs.HEIGHT -sizeTank)) {
-            Y = CommonVLs.HEIGHT-sizeTank;
+        if (orient == DOWN && Y >= (CommonVLs.HEIGHT - sizeTank)) {
+            Y = CommonVLs.HEIGHT - sizeTank;
             return false;
         }
-        if (orient == RIGHT &&X >= (CommonVLs.WIDTH-sizeTank)) {
-            X = CommonVLs.WIDTH-sizeTank;
+        if (orient == RIGHT && X >= (CommonVLs.WIDTH - sizeTank)) {
+            X = CommonVLs.WIDTH - sizeTank;
             return false;
         }
         if (orient == LEFT && X <= 0) {
             X = 1;
             return false;
-        }
-        else return true;
+        } else return true;
 
     }
 
-    public boolean checkSticklyBullet() {
-        boolean check = false;
 
-        return check;
+    public int getSizeTank() {
+        return this.sizeTank;
     }
-
-    public int getSizeTank(){return this.sizeTank;}
 
     public int getX() {
         return this.X;
+    }
+
+    public void setX(int x) {
+        this.X = x;
+    }
+
+    public void setY(int y) {
+        this.Y = y;
+    }
+
+    public void setOrient(int orient) {
+        this.orient = orient;
     }
 
     public int getY() {
@@ -188,6 +198,44 @@ public abstract class Tank {
     public int getOrient() {
         return this.orient;
     }
+
+    public int getSpeed() {
+        return this.speed;
+    }
+
+    public boolean isPointInside(int xObj, int yObj, int x, int y, int size) {
+        int bottomPoint = x + size;
+        int rightPoint = y + size;
+        if (xObj > x
+                && yObj > y
+                && xObj < bottomPoint
+                && yObj < rightPoint
+                ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean checkBullet(int xObj, int yObj, int sizeObj) {
+        int x = this.X;//* this.sizeTank;
+        int y = this.Y;//* this.sizeTank;
+        if (isPointInside(xObj, yObj, x, y, this.sizeTank)
+                || isPointInside(xObj + sizeObj, yObj, x, y, this.sizeTank)
+                || isPointInside(xObj, yObj + sizeObj, x, y, this.sizeTank)
+                || isPointInside(xObj + sizeObj, yObj + sizeObj, x, y, this.sizeTank)) {
+            return true;
+        }
+        if (isPointInside(x, y, xObj, yObj, sizeObj)
+                || isPointInside(x + this.sizeTank, y, xObj, yObj, sizeObj)
+                || isPointInside(x, y + this.sizeTank, xObj, yObj, sizeObj)
+                || isPointInside(x + this.sizeTank, y + this.sizeTank, xObj, yObj, sizeObj)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
 
 
