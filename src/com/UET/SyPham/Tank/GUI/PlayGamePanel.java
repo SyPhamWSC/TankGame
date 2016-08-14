@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 
 import static java.lang.Thread.sleep;
 
@@ -26,6 +27,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
     private EnemyTank enemyTanks1, enemyTanks2, enemyTanks3;
     private EnemyTankManager enemyTankManager;
 
+    CommonVLs commonVLs;
     private BulletManager bulletManagerEnemyTanks;
     private BulletManager bulletManager;
 
@@ -48,7 +50,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         playerTank = new PlayerTank(30, 30);
         enemyTankManager = new EnemyTankManager();
         animationMgr = new AnimationManager();
-
+        commonVLs = new CommonVLs();
         bulletManagerEnemyTanks = new BulletManager();
         enemyTanks1 = new EnemyTank(250, 250);
         enemyTanks2 = new EnemyTank(300, 350);
@@ -56,7 +58,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         enemyTankManager.addEnemyTank(enemyTanks1);
         enemyTankManager.addEnemyTank(enemyTanks2);
         enemyTankManager.addEnemyTank(enemyTanks3);
-
+        enemyTankManager.addEnemyTank(new EnemyTank(150,150));
         mapMgr = new MapManager();
         //mapMgr.checkInside(playerTank.getX(), playerTank.getY(), playerTank.getSizeTank());
         addKeyListener(this);
@@ -82,35 +84,37 @@ public class PlayGamePanel extends JPanel implements KeyListener {
                 System.out.println("Dinh Dan");
                 animationMgr.addAnim(1,playerTank.getX(), playerTank.getY());
                 bulletManagerEnemyTanks.returnBullet().remove(i);
+                isPlaying = false;
+                JOptionPane.showMessageDialog(null, "Thua rồi cưng ơi");
             }
         }
     }
 
 
     /**
-     * Gap map thi xoa dan
+     * Xóa đạn khi bị bắn vào tường
      */
-    private void DeleBullet() {
-        for (int i = 0; i < bulletManager.returnBullet().size(); i++) {
+    private void DeleBullet(BulletManager bulletMgr) {
+        for (int i = 0; i < bulletMgr.returnBullet().size(); i++) {
             //Bullet contentBullet = bulletManager.returnBullet().get(i);
-            if (mapMgr.checkInside(bulletManager.returnBullet().get(i).getX(), bulletManager.returnBullet().get(i).getY(),
-                    bulletManager.returnBullet().get(i).getSize())) {
-                int orientTemp = bulletManager.returnBullet().get(i).getOrient();
-                switch (orientTemp){
+            if (mapMgr.checkInside(bulletMgr.returnBullet().get(i).getX(), bulletMgr.returnBullet().get(i).getY(),
+                    bulletMgr.returnBullet().get(i).getSize())) {
+                int orientTemp = bulletMgr.returnBullet().get(i).getOrient();
+                switch (orientTemp) {
                     case Tank.UP:
-                        animationMgr.addAnim(1,bulletManager.returnBullet().get(i).getX()- (CommonVLs.ANIMATION_SIZE/2) + 4,bulletManager.returnBullet().get(i).getY());
+                        animationMgr.addAnim(1, bulletMgr.returnBullet().get(i).getX() - (CommonVLs.ANIMATION_SIZE / 2) + 4, bulletMgr.returnBullet().get(i).getY());
                         break;
                     case Tank.DOWN:
-                        animationMgr.addAnim(1,bulletManager.returnBullet().get(i).getX()- (CommonVLs.ANIMATION_SIZE/2) + 4,bulletManager.returnBullet().get(i).getY() - CommonVLs.ANIMATION_SIZE);
+                        animationMgr.addAnim(1, bulletMgr.returnBullet().get(i).getX() - (CommonVLs.ANIMATION_SIZE / 2) + 4, bulletMgr.returnBullet().get(i).getY() - CommonVLs.ANIMATION_SIZE);
                         break;
                     case Tank.LEFT:
-                        animationMgr.addAnim(1,bulletManager.returnBullet().get(i).getX(),bulletManager.returnBullet().get(i).getY()- (CommonVLs.ANIMATION_SIZE/2) + 4);
+                        animationMgr.addAnim(1, bulletMgr.returnBullet().get(i).getX(), bulletMgr.returnBullet().get(i).getY() - (CommonVLs.ANIMATION_SIZE / 2) + 4);
                         break;
                     case Tank.RIGHT:
-                        animationMgr.addAnim(1,bulletManager.returnBullet().get(i).getX()- CommonVLs.ANIMATION_SIZE/2,bulletManager.returnBullet().get(i).getY()- (CommonVLs.ANIMATION_SIZE/2) + 4);
+                        animationMgr.addAnim(1, bulletMgr.returnBullet().get(i).getX() - CommonVLs.ANIMATION_SIZE / 2, bulletMgr.returnBullet().get(i).getY() - (CommonVLs.ANIMATION_SIZE / 2) + 4);
                         break;
                 }
-                bulletManager.returnBullet().remove(i);
+                bulletMgr.returnBullet().remove(i);
             }
         }
     }
@@ -160,15 +164,35 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         }
     }
 
+
+    /**
+     * Hàm update các hoạt động trong game
+     */
     private void update() {
         enemyTankManager.shootAll(bulletManagerEnemyTanks);
-        //enemyMove();
         bulletManagerEnemyTanks.moveAll();
         enemyTankManager.moveAll();
+        //enemyTankManager.move();
         bulletManager.moveAll();
-        DeleBullet();
+
+        DeleBullet(bulletManager);
+        DeleBullet(bulletManagerEnemyTanks);
+
         checkStickBulletPlayer();
+
         enemyTankManager.checkStickBullet(bulletManager,animationMgr);
+
+        /**
+         * Check biến isPlaying, nếu hết tank địch thì trả về true --> Win
+         */
+        if(enemyTankManager.returnEnemyTank().isEmpty()){
+            isPlaying = false;
+            JOptionPane.showMessageDialog(null,"Thắng rồi cưng ơi!!!đsss");
+        }
+
+        /**
+         * Kiểm tra va chạm của tank với Map
+         */
         if (orient != 0) {
 
             if (orient != 0) {
@@ -226,6 +250,9 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         }
     }
 
+    /**
+     * Biến count để vẽ lại nhiều lần animation tank nổ theo số lần mong muốn
+     */
     private int count;
     Thread thread = new Thread(new Runnable() {
         @Override
@@ -256,6 +283,11 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         switch (keyEvent.getKeyCode()) {
             case KeyEvent.VK_SPACE:
                 bulletManager.add(new Bullet(playerTank.getX(), playerTank.getY(), playerTank.getOrient(), playerTank.getSizeTank()));
+                try {
+                    commonVLs.playSound("shoot_tank.wav");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case KeyEvent.VK_W:
                 orient = Tank.UP;

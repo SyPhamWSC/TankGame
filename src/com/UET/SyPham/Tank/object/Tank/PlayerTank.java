@@ -10,6 +10,11 @@ import java.awt.event.KeyListener;
 /**
  * Created by sypha_000 on 27-Jul-2016.
  */
+
+/**
+ * Tank của người chơi
+ */
+
 public class PlayerTank extends Tank {
     private boolean checkAllowMove = false;
     public PlayerTank(int x, int y) {

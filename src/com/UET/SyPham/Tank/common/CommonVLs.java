@@ -1,7 +1,14 @@
 package com.UET.SyPham.Tank.common;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by sypha_000 on 27-Jul-2016.
@@ -18,8 +25,17 @@ public class CommonVLs {
     public static final int BULLET_EXPLORE = 2;
     public static final int ANIMATION_SIZE = 30;
 
+    public static final String PATH_AUDIO = "/RESOURCE/sound/";
+
     public Image getImage(String name){
 //        return new ImageIcon(getClass().getResource("/RESOURCE/Image/"+name)).getImage();
         return new ImageIcon(getClass().getResource("/RESOURCE/Image/" + name)).getImage();
+    }
+
+    public void playSound(String name) throws IOException {
+        String path = getClass().getResource(PATH_AUDIO+name).getPath();
+        InputStream inputStream = new FileInputStream(path);
+        AudioStream audioStream = new AudioStream(inputStream);
+        AudioPlayer.player.start(audioStream);
     }
 }

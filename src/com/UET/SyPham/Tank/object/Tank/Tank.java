@@ -203,6 +203,10 @@ public abstract class Tank {
         return this.speed;
     }
 
+
+    /**
+     * Kiểm tra một điểm có năm trong khối không
+     */
     public boolean isPointInside(int xObj, int yObj, int x, int y, int size) {
         int bottomPoint = x + size;
         int rightPoint = y + size;
@@ -213,13 +217,16 @@ public abstract class Tank {
                 ) {
             return true;
         }
-
         return false;
     }
 
+    /**
+     * Kiểm tra 4 điểm là 4 đỉnh của 1 vật thể xem nó có nằm trong khối còn lại không, nếu có 1 điểm nằm trong là 2 vật đang
+     * đang giao nhau
+     */
     public boolean checkBullet(int xObj, int yObj, int sizeObj) {
-        int x = this.X;//* this.sizeTank;
-        int y = this.Y;//* this.sizeTank;
+        int x = this.X;
+        int y = this.Y;
         if (isPointInside(xObj, yObj, x, y, this.sizeTank)
                 || isPointInside(xObj + sizeObj, yObj, x, y, this.sizeTank)
                 || isPointInside(xObj, yObj + sizeObj, x, y, this.sizeTank)
