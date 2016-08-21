@@ -16,8 +16,6 @@ import java.io.*;
  */
 public class GUI extends JFrame{
     private PlayGamePanel playGamePanel;
-    private JMenuBar menuBar;
-
     CommonVLs commonVLs;
 
 
@@ -29,13 +27,14 @@ public class GUI extends JFrame{
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setExtendedState(JFrame.MAXIMIZED_BOTH);
-//        setUndecorated(true);
         playGamePanel = new PlayGamePanel();
         add(playGamePanel);
         commonVLs = new CommonVLs();
-
-       commonVLs.playSound("enter_game.wav");
+        MenuPanel menuPanel= new MenuPanel();
+        add(menuPanel);
+        menuPanel.setListener(playGamePanel);
 
     }
+
+
 }

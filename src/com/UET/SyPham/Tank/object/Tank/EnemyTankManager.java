@@ -17,19 +17,14 @@ public class EnemyTankManager {
 
     private CommonVLs commonVLs;
     private ArrayList<EnemyTank> enemyTanks;
-    private MapManager mapMgr;
+    //private MapManager mapMgr;
 
     public EnemyTankManager(){
         enemyTanks = new ArrayList<>();
         commonVLs = new CommonVLs();
-        mapMgr = new MapManager();
+        //mapMgr = new MapManager();
     }
 
-    public void moveAll(){
-        for (int i = 0; i <enemyTanks.size() ; i++) {
-            enemyTanks.get(i).move();
-        }
-    }
     public  void addEnemyTank(EnemyTank e){
         enemyTanks.add(e);
     }
@@ -66,7 +61,7 @@ public class EnemyTankManager {
         for (int i = 0; i < bulletMgr.returnBullet().size() ; i++) {
             Bullet bullet = bulletMgr.returnBullet().get(i);
             for (int j = 0; j <enemyTanks.size() ; j++) {
-                if (enemyTanks.get(j).checkBullet(bullet.getX(),bullet.getY(),bullet.getSize())){
+                if (enemyTanks.get(j).checkInside(bullet.getX(),bullet.getY(),bullet.getSize())){
                     aniMgr.addAnim(1,enemyTanks.get(j).getX(), enemyTanks.get(j).getY());
                     try {
                         commonVLs.playSound("buildBouns.wav");
@@ -81,61 +76,97 @@ public class EnemyTankManager {
             }
         }
     }
-    int orients;
-    public void move(){
-        for (int i = 0; i < enemyTanks.size() ; i++) {
-            orients = enemyTanks.get(i).getOrient();
-            EnemyTank e = enemyTanks.get(i);
-            if (orients != 0) {
-                switch (orients) {
-                    case Tank.UP:
-                        if (!mapMgr.checkInside(e.getX(), e.getY() - e.getSpeed(),
-                                e.getSizeTank())) {
-                            enemyTanks.get(i).move();
-                        }
-                        else{
-                            enemyTanks.get(i).setOrient(Tank.DOWN);
-                            enemyTanks.get(i).move();
-                        }
-                        break;
-                    case Tank.DOWN:
-                        if (!mapMgr.checkInside(e.getX(), e.getY() + e.getSpeed(),
-                                e.getSizeTank())) {
-                            //System.out.println("orient: " + orient);
-                            enemyTanks.get(i).move();
-                        }else{
-                            enemyTanks.get(i).setOrient(Tank.UP);
-                            enemyTanks.get(i).move();
-                        }
 
-                        break;
-                    case Tank.LEFT:
-                        if (!mapMgr.checkInside(e.getX() - e.getSpeed(), e.getY(),
-                                e.getSizeTank())) {
-                            //System.out.println("orient: " + orient);
-                            enemyTanks.get(i).move();
-                        }
-                        else{
-                            enemyTanks.get(i).setOrient(Tank.RIGHT);
-                            enemyTanks.get(i).move();
-                        }
-                        break;
-                    case Tank.RIGHT:
-                        if (!mapMgr.checkInside(e.getX() + e.getSpeed(), e.getY(),
-                                e.getSizeTank())) {
-                            //System.out.println("orient: " + orient);
-                            enemyTanks.get(i).move();
-                        }
-                        else{
-                            enemyTanks.get(i).setOrient(Tank.LEFT);
-                            enemyTanks.get(i).move();
-                        }
-                        break;
+
+    public void moveAll(MapManager mapMgr){
+
+        for (int i = 0; i < enemyTanks.size() ; i++) {
+            EnemyTank e = enemyTanks.get(i);
+            boolean allowMove = true;
+            switch (e.getOrient()) {
+                case Tank.UP:
+                    if (mapMgr.checkInside(e.getX(), e.getY() - e.getSpeed(),
+                            e.getSizeTank())) {
+                        //e.move();
+                        allowMove = false;
+                    }
+                    break;
+                case Tank.DOWN:
+                    if (mapMgr.checkInside(e.getX(), e.getY() + e.getSpeed(),
+                            e.getSizeTank())) {
+                        //System.out.println("orient: " + orient);
+                        //e.move();
+                        allowMove = false;
+                    }
+                    break;
+                case Tank.LEFT:
+                    if (mapMgr.checkInside(e.getX() - e.getSpeed(), e.getY(),
+                            e.getSizeTank())) {
+                        //System.out.println("orient: " + orient);
+                        //e.move();
+                        allowMove = false;
+                    }
+                    break;
+                case Tank.RIGHT:
+                    if (mapMgr.checkInside(e.getX() + e.getSpeed(), e.getY(),
+                            e.getSizeTank())) {
+                        //System.out.println("orient: " + orient);
+                        //e.move();
+                        allowMove = false;
+                    }
+                    break;
+            }
+            for (int j = 0; j <this.enemyTanks.size() ; j++) {
+                EnemyTank other = this.enemyTanks.get(j);
+                if(other!=e){
+
+                    switch (e.getOrient()){
+                        case Tank.UP:
+                            if (other.checkInside(e.getX(), e.getY() - e.getSpeed(),
+                                    e.getSizeTank())) {
+                                //e.move();
+                                allowMove = false;
+
+                            }
+                            break;
+                        case Tank.DOWN:
+                            if (other.checkInside(e.getX(), e.getY() + e.getSpeed(),
+                                    e.getSizeTank())) {
+                                //System.out.println("orient: " + orient);
+                                //e.move();
+                                allowMove = false;
+                            }
+                            break;
+                        case Tank.LEFT:
+                            if (other.checkInside(e.getX() - e.getSpeed(), e.getY(),
+                                    e.getSizeTank())) {
+                                //System.out.println("orient: " + orient);
+                                //e.move();
+                                allowMove = false;
+                            }
+                            break;
+                        case Tank.RIGHT:
+                            if (other.checkInside(e.getX() + e.getSpeed(), e.getY(),
+                                    e.getSizeTank())) {
+                                //System.out.println("orient: " + orient);
+                                //e.move();
+                                allowMove = false;
+                            }
+                            break;
+                    }
                 }
+            }
+            if(allowMove){
+                e.move(e.getOrient());
             }
         }
     }
 
+    public void changeOrientAll(){
+        for (int i = 0; i < this.enemyTanks.size() ; i++) {
+            this.enemyTanks.get(i).changeOrient();
+        }
+    }
     public ArrayList<EnemyTank> returnEnemyTank(){
         return enemyTanks;
     }

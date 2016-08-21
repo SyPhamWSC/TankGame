@@ -22,11 +22,12 @@ import static java.lang.Thread.sleep;
 /**
  * Created by sypha_000 on 27-Jul-2016.
  */
-public class PlayGamePanel extends JPanel implements KeyListener {
+public class PlayGamePanel extends JPanel implements MenuPanel.Listener, KeyListener {
     private PlayerTank playerTank;
     private EnemyTank enemyTanks1, enemyTanks2, enemyTanks3;
     private EnemyTankManager enemyTankManager;
 
+    private boolean checkExit;
     CommonVLs commonVLs;
     private BulletManager bulletManagerEnemyTanks;
     private BulletManager bulletManager;
@@ -45,7 +46,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
 
     public void initCompoments() {
         setBounds(0, 0, CommonVLs.WIDTH, CommonVLs.HEIGHT);
-        setBackground(Color.BLUE);
+        setBackground(Color.MAGENTA);
         bulletManager = new BulletManager();
         playerTank = new PlayerTank(30, 30);
         enemyTankManager = new EnemyTankManager();
@@ -63,6 +64,8 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         //mapMgr.checkInside(playerTank.getX(), playerTank.getY(), playerTank.getSizeTank());
         addKeyListener(this);
         setFocusable(true);
+        //MenuPanel menuPanel = new MenuPanel();
+        //menuPanel.setListener(this);
     }
 
     /**
@@ -80,7 +83,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
     public void checkStickBulletPlayer() {
         for (int i = 0; i < bulletManagerEnemyTanks.returnBullet().size(); i++) {
             Bullet bullet = bulletManagerEnemyTanks.returnBullet().get(i);
-            if(playerTank.checkBullet(bullet.getX(), bullet.getY(),bullet.getSize())){
+            if(playerTank.checkInside(bullet.getX(), bullet.getY(),bullet.getSize())){
                 System.out.println("Dinh Dan");
                 animationMgr.addAnim(1,playerTank.getX(), playerTank.getY());
                 bulletManagerEnemyTanks.returnBullet().remove(i);
@@ -96,8 +99,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
      */
     private void DeleBullet(BulletManager bulletMgr) {
         for (int i = 0; i < bulletMgr.returnBullet().size(); i++) {
-            //Bullet contentBullet = bulletManager.returnBullet().get(i);
-            if (mapMgr.checkInside(bulletMgr.returnBullet().get(i).getX(), bulletMgr.returnBullet().get(i).getY(),
+            if (mapMgr.checkInsideWithBrick(bulletMgr.returnBullet().get(i).getX(), bulletMgr.returnBullet().get(i).getY(),
                     bulletMgr.returnBullet().get(i).getSize())) {
                 int orientTemp = bulletMgr.returnBullet().get(i).getOrient();
                 switch (orientTemp) {
@@ -118,52 +120,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
             }
         }
     }
-
-    private void enemyMove(){
-        for (int i = 0; i < enemyTankManager.getenemyTanks().size() ; i++) {
-            int orientTank = enemyTankManager.getenemyTanks().get(i).getOrient();
-            EnemyTank tempEnt = enemyTankManager.getenemyTanks().get(i);
-            switch (orientTank){
-                case Tank.UP:
-                    if(!mapMgr.checkInside(tempEnt.getX(), tempEnt.getY() - tempEnt.getSpeed(),tempEnt.getSizeTank())){
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }else {
-                        enemyTankManager.getenemyTanks().get(i).setY(tempEnt.getY() + 1 );
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }
-                    //System.out.println("ko chay nua UP");
-                    break;
-                case Tank.DOWN:
-                    if(!mapMgr.checkInside(tempEnt.getX(), tempEnt.getY() + tempEnt.getSpeed(),tempEnt.getSizeTank())){
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }else {
-                        enemyTankManager.getenemyTanks().get(i).setY(tempEnt.getY() - 1 );
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }
-                    //System.out.println("ko chay nua Down");
-                    break;
-                case Tank.LEFT:
-                    if(!mapMgr.checkInside(tempEnt.getX()- tempEnt.getSpeed(), tempEnt.getY() ,tempEnt.getSizeTank())){
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }else {
-                        enemyTankManager.getenemyTanks().get(i).setX(tempEnt.getX() + 1 );
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }
-                    //System.out.println("ko chay nua Left");
-                    break;
-                case Tank.RIGHT:
-                    if(!mapMgr.checkInside(tempEnt.getX()+ tempEnt.getSpeed(), tempEnt.getY() - tempEnt.getSpeed(),tempEnt.getSizeTank())){
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }else {
-                        enemyTankManager.getenemyTanks().get(i).setX(tempEnt.getX() - 1 );
-                        enemyTankManager.getenemyTanks().get(i).move();
-                    }
-                    //System.out.println("ko chay nua Right");
-                    break;
-            }
-        }
-    }
-
+    
 
     /**
      * Hàm update các hoạt động trong game
@@ -171,15 +128,17 @@ public class PlayGamePanel extends JPanel implements KeyListener {
     private void update() {
         enemyTankManager.shootAll(bulletManagerEnemyTanks);
         bulletManagerEnemyTanks.moveAll();
-        enemyTankManager.moveAll();
-        //enemyTankManager.move();
+        enemyTankManager.moveAll(mapMgr);
+        if (count%20 ==0){
+            enemyTankManager.changeOrientAll();
+        }
         bulletManager.moveAll();
 
         DeleBullet(bulletManager);
         DeleBullet(bulletManagerEnemyTanks);
 
-        checkStickBulletPlayer();
 
+        checkStickBulletPlayer();
         enemyTankManager.checkStickBullet(bulletManager,animationMgr);
 
         /**
@@ -240,6 +199,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         super.paintComponent(graphics);
         Graphics2D g2d;
         g2d = (Graphics2D) graphics;
+        mapMgr.drawAll(g2d);
         playerTank.drawTank(g2d);
         bulletManager.drawAllBullet(g2d);
         enemyTankManager.drawAll(g2d);
@@ -248,6 +208,7 @@ public class PlayGamePanel extends JPanel implements KeyListener {
         if(count%3==0){
             animationMgr.drawAll(g2d);
         }
+
     }
 
     /**
@@ -257,8 +218,13 @@ public class PlayGamePanel extends JPanel implements KeyListener {
     Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {
+            try {
+                commonVLs.playSound("enter_game.wav");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             while (isPlaying) {
-                gameLoop();
+                if (!isPause) gameLoop();
                 count++;
                 if(count>10000){
                     count = 0;
@@ -272,6 +238,8 @@ public class PlayGamePanel extends JPanel implements KeyListener {
 
         }
     });
+
+    private boolean isPause = false;
 
     @Override
     public void keyTyped(KeyEvent keyEvent) {
@@ -309,4 +277,13 @@ public class PlayGamePanel extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent keyEvent) {
         orient = 0;
     }
+
+    @Override
+    public void returnIsPause(boolean isPause) {
+        boolean check = isPause;
+        this.isPause = check;
+
+    }
+
+
 }

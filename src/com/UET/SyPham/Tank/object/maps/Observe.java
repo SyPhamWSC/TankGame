@@ -24,6 +24,10 @@ public class Observe {
             CommonVLs common = new CommonVLs();
             this.img = common.getImage("brick1.png");
         }
+        if(this.type == CommonVLs.WATER_TYPE){
+            CommonVLs commonVLs = new CommonVLs();
+            this.img = commonVLs.getImage("water.png");
+        }
     }
 
     public void draw(Graphics2D g2d){
@@ -40,7 +44,6 @@ public class Observe {
                 ){
             return true;
         }
-
         return false;
     }
 
@@ -61,5 +64,8 @@ public class Observe {
         }
 
         return false;
+    }
+    public int getType(){
+        return this.type;
     }
 }

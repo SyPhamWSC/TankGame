@@ -24,11 +24,14 @@ public class MapManager {
                 {
                     observes.add(new Observe(i,j, CommonVLs.BRICK_TYPE));
                 }
-
                 observes.add(new Observe(10, 20, CommonVLs.BRICK_TYPE));
                 observes.add(new Observe(2, 10, CommonVLs.BRICK_TYPE));
                 observes.add(new Observe(4, 15, CommonVLs.BRICK_TYPE));
-                observes.add(new Observe(8, 9, CommonVLs.BRICK_TYPE));
+                //observes.add(new Observe(8, 9, CommonVLs.BRICK_TYPE));
+                observes.add(new Observe(6,12,CommonVLs.WATER_TYPE));
+                observes.add(new Observe(7,12,CommonVLs.WATER_TYPE));
+                observes.add(new Observe(8,12,CommonVLs.WATER_TYPE));
+                observes.add(new Observe(8,11,CommonVLs.WATER_TYPE));
         }
     }
     public void drawAll(Graphics2D g2d){
@@ -36,17 +39,23 @@ public class MapManager {
             observes.get(i).draw(g2d);
         }
     }
-
-    public boolean checkInside(int x, int y, int size){
+    public boolean checkInsideWithBrick(int x, int y, int size){
         for (int i = 0; i < observes.size() ; i++) {
-            if( observes.get(i).isObjInside(x, y, size)) {
-                return true;
+            if(observes.get(i).getType() == CommonVLs.BRICK_TYPE) {
+                if (observes.get(i).isObjInside(x, y, size)) {
+                    return true;
+                }
             }
         }
         return false;
-
     }
-
-
+    public boolean checkInside(int x, int y, int size){
+        for (int i = 0; i < observes.size() ; i++) {
+            if (observes.get(i).isObjInside(x, y, size)) {
+                    return true;
+            }
+        }
+        return false;
+    }
 
 }

@@ -20,6 +20,7 @@ public class CommonVLs {
     public static final int WIDTH_GUI = 700;
 
     public static final int BRICK_TYPE = 1;
+    public static final int WATER_TYPE = 2;
 
     public static final int TANK_EXPLORE = 1;
     public static final int BULLET_EXPLORE = 2;
@@ -37,5 +38,12 @@ public class CommonVLs {
         InputStream inputStream = new FileInputStream(path);
         AudioStream audioStream = new AudioStream(inputStream);
         AudioPlayer.player.start(audioStream);
+    }
+    public Icon setIconBtn(String name, int sizeX, int sizeY){
+        ImageIcon imgIcon = new ImageIcon(getClass().getResource("/RESOURCE/Image/"+ name));
+        Image img = imgIcon.getImage();
+        Image newImg = img.getScaledInstance(sizeX, sizeY,Image.SCALE_SMOOTH);
+        Icon icon = new ImageIcon(newImg);
+        return icon;
     }
 }

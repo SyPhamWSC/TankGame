@@ -224,7 +224,7 @@ public abstract class Tank {
      * Kiểm tra 4 điểm là 4 đỉnh của 1 vật thể xem nó có nằm trong khối còn lại không, nếu có 1 điểm nằm trong là 2 vật đang
      * đang giao nhau
      */
-    public boolean checkBullet(int xObj, int yObj, int sizeObj) {
+    public boolean checkInside(int xObj, int yObj, int sizeObj) {
         int x = this.X;
         int y = this.Y;
         if (isPointInside(xObj, yObj, x, y, this.sizeTank)

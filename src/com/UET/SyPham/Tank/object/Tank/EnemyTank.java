@@ -74,4 +74,7 @@ public class EnemyTank extends Tank {
     }
 
 
+    public void changeOrient() {
+        this.orient = random.nextInt(5);
+    }
 }
